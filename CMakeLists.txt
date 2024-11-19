@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.6 FATAL_ERROR)
+set(CMAKE_CXX_STANDARD 17)
 
 SET(LICENSECC_SHORT_LICENSE "BSD Software License")
 
@@ -23,7 +24,7 @@ project (licensecc
 			LANGUAGES CXX)
 set(PROJECT_DESCRIPTION "Copy protection and licensing library")
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")
 
@@ -109,7 +110,7 @@ endif(UNIX)
 #load the current project from files or find it from environment variables or create a default one
 set(LCC_INCLUDE_DIR "${LCC_PROJECTS_BASE_DIR}/${LCC_PROJECT_NAME}/include/${PROJECT_NAME}/${LCC_PROJECT_NAME}" )
 set(LCC_PROJECT_PUBLIC_KEY "${LCC_INCLUDE_DIR}/public_key.h" )
-set(LCC_PROJECT_PRIVATE_KEY "${LCC_PROJECTS_BASE_DIR}/${LCC_PROJECT_NAME}/private_key.rsa" )
+set(LCC_PROJECT_PRIVATE_KEY "${LCC_PROJECTS_BASE_DIR}/${LCC_PROJECT_NAME}/private_key.pem" )
 
 add_custom_target(project_initialize
   COMMAND license_generator::lccgen project initialize -t "${PROJECT_SOURCE_DIR}/src/templates" -n "${LCC_PROJECT_NAME}" -p "${LCC_PROJECTS_BASE_DIR}"

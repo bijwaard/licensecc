@@ -1,7 +1,8 @@
 #define BOOST_TEST_MODULE test_date
 
 #include <boost/test/unit_test.hpp>
-#include <boost/filesystem.hpp>
+#include <filesystem>
+//#include <boost/filesystem.hpp>
 
 #include <licensecc_properties.h>
 #include <licensecc_properties_test.h>
@@ -10,7 +11,8 @@
 #include "../../src/library/ini/SimpleIni.h"
 #include "generate-license.h"
 
-namespace fs = boost::filesystem;
+//namespace fs = boost::filesystem;
+namespace fs = std::filesystem;
 using namespace license;
 using namespace std;
 
@@ -28,6 +30,8 @@ BOOST_AUTO_TEST_CASE(license_not_expired) {
 	std::copy(licLocation.begin(), licLocation.end(), location.licenseData);
 
 	const LCC_EVENT_TYPE result = acquire_license(nullptr, &location, &license);
+  
+	BOOST_CHECK_NE(result, LICENSE_CORRUPTED);
 	BOOST_CHECK_EQUAL(result, LICENSE_OK);
 	BOOST_CHECK_EQUAL(license.has_expiry, true);
 	BOOST_CHECK_EQUAL(license.linked_to_pc, false);
@@ -45,6 +49,7 @@ BOOST_AUTO_TEST_CASE(license_expired) {
 	std::copy(licLocation.begin(), licLocation.end(), location.licenseData);
 	BOOST_TEST_MESSAGE("before acquire license");
 	const LCC_EVENT_TYPE result = acquire_license(nullptr, &location, &license);
+	BOOST_CHECK_NE(result, LICENSE_CORRUPTED);
 	BOOST_CHECK_EQUAL(result, PRODUCT_EXPIRED);
 	BOOST_CHECK_EQUAL(license.has_expiry, true);
 	BOOST_CHECK_EQUAL(license.linked_to_pc, false);

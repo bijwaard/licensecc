@@ -2,7 +2,8 @@
 #define BOOST_TEST_MODULE test_standard_license
 
 #include <boost/test/unit_test.hpp>
-#include <boost/filesystem.hpp>
+#include <filesystem>
+//#include <boost/filesystem.hpp>
 
 #include <licensecc/licensecc.h>
 #include <licensecc_properties_test.h>
@@ -13,7 +14,8 @@
 #include "../../src/library/base/file_utils.hpp"
 
 using namespace std;
-namespace fs = boost::filesystem;
+//namespace fs = boost::filesystem;
+namespace fs = std::filesystem;
 
 namespace license {
 namespace test {

@@ -30,7 +30,7 @@ using namespace std;
 #define NT_SUCCESS(Status) (((NTSTATUS)(Status)) >= 0)
 
 static const void formatError(DWORD status, const char *description) {
-	char msgBuffer[256];
+	char msgBuffer[512];
 	FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, status, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), &msgBuffer[0],
 				  sizeof(msgBuffer) - 1, nullptr);
 	LOG_DEBUG("error %s : %s %h", description, msgBuffer, status);
@@ -47,7 +47,7 @@ typedef struct {
 static BCRYPT_ALG_HANDLE openHashProvider() {
 	DWORD status;
 	BCRYPT_ALG_HANDLE hHashAlg = nullptr;
-	if (!NT_SUCCESS(status = BCryptOpenAlgorithmProvider(&hHashAlg, BCRYPT_SHA256_ALGORITHM, NULL, 0))) {
+	if (!NT_SUCCESS(status = BCryptOpenAlgorithmProvider(&hHashAlg, BCRYPT_SHA512_ALGORITHM, NULL, 0))) {
 		throw logic_error("Error opening hash provider");
 	}
 	return hHashAlg;
@@ -146,7 +146,7 @@ static FUNCTION_RETURN verifyHash(const PBYTE pbHash, const DWORD hashDataLenght
 		if ((result = readPublicKey(hSignAlg, &phKey)) == FUNC_RET_OK) {
 			BCRYPT_PKCS1_PADDING_INFO paddingInfo;
 			ZeroMemory(&paddingInfo, sizeof(paddingInfo));
-			paddingInfo.pszAlgId = BCRYPT_SHA256_ALGORITHM;
+			paddingInfo.pszAlgId = BCRYPT_SHA512_ALGORITHM;
 			if (NT_SUCCESS(status = BCryptVerifySignature(phKey, &paddingInfo, pbHash, hashDataLenght, sigBlob,
 														  dwSigLen, BCRYPT_PAD_PKCS1))) {
 				result = FUNC_RET_OK;

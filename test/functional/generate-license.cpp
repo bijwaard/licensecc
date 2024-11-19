@@ -6,7 +6,8 @@
  */
 
 #include <boost/test/unit_test.hpp>
-#include <boost/filesystem.hpp>
+#include <filesystem>
+//#include <boost/filesystem.hpp>
 #include <boost/algorithm/string.hpp>
 #include <sstream>
 #include <fstream>
@@ -19,7 +20,8 @@
 #include "../../src/library/ini/SimpleIni.h"
 #include "generate-license.h"
 
-namespace fs = boost::filesystem;
+//namespace fs = boost::filesystem;
+namespace fs = std::filesystem;
 using namespace std;
 
 namespace license {

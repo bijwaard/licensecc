@@ -11,6 +11,7 @@
 #include <fstream>
 #include <iostream>
 #include <stdio.h>
+#include <cstdint>
 #include <cstring>
 #include <dirent.h>
 #include <sys/utsname.h>

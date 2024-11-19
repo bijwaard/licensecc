@@ -7,6 +7,7 @@
 #include <cmath>
 #include <algorithm>
 #include <licensecc_properties.h>
+#include <iostream>
 
 #include "license_verifier.hpp"
 #include "../base/string_utils.h"
@@ -22,7 +23,6 @@ LicenseVerifier::~LicenseVerifier() {}
 
 FUNCTION_RETURN LicenseVerifier::verify_signature(const FullLicenseInfo& licInfo) {
 	const string licInfoData(licInfo.printForSign());
-
 	FUNCTION_RETURN ret = license::os::verify_signature(licInfoData, licInfo.license_signature);
 
 	if (ret == FUNC_RET_OK) {

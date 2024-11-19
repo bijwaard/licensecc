@@ -1,3 +1,4 @@
+set(CMAKE_CXX_STANDARD 17)
 ADD_LIBRARY(base OBJECT
     EventRegistry.cpp
     file_utils.cpp

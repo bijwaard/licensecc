@@ -7,7 +7,8 @@
 #include <cstdio>
 #include <fstream>
 #include <vector>
-#include <boost/filesystem.hpp>
+#include <filesystem>
+//#include <boost/filesystem.hpp>
 #include <boost/optional.hpp>
 #include <boost/test/unit_test.hpp>
 #include <stdlib.h>
@@ -26,7 +27,8 @@
 namespace test {
 using namespace license::locate;
 using namespace std;
-using namespace boost::filesystem;
+//using namespace boost::filesystem;
+using namespace std::filesystem;
 
 static boost::optional<path> find_file(const path &dir_path, const path &file_name) {
 	const recursive_directory_iterator end;

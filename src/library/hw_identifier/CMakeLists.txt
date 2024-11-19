@@ -1,3 +1,4 @@
+set(CMAKE_CXX_STANDARD 17)
 add_library(hw_identifier OBJECT
 	hw_identifier_facade.cpp
 	default_strategy.cpp

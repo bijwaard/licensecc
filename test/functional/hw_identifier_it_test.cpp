@@ -5,7 +5,8 @@
 #include <iostream>
 #include <stdio.h>
 #include <cstring>
-#include <boost/filesystem.hpp>
+#include <filesystem>
+//#include <boost/filesystem.hpp>
 #include <licensecc_properties.h>
 #include <licensecc_properties_test.h>
 
@@ -19,7 +20,8 @@
 
 namespace license {
 namespace test {
-namespace fs = boost::filesystem;
+//namespace fs = boost::filesystem;
+namespace fs = std::filesystem;
 using namespace std;
 using namespace hw_identifier;
 

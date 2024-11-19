@@ -1,3 +1,4 @@
+set(CMAKE_CXX_STANDARD 17)
 ADD_LIBRARY(license_generator_snippet STATIC
  	generate-license.cpp
 )
