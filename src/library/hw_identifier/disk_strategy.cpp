@@ -28,7 +28,7 @@ static array<uint8_t, HW_IDENTIFIER_PROPRIETARY_DATA> generate_id_by_label(const
 }
 
 static FUNCTION_RETURN generate_disk_pc_id(vector<array<uint8_t, HW_IDENTIFIER_PROPRIETARY_DATA>> &v_disk_id) {
-	std::vector<DiskInfo> disk_infos;
+	vector<DiskInfo> disk_infos;
 	FUNCTION_RETURN result_diskinfos = getDiskInfos(disk_infos);
 	if (result_diskinfos != FUNC_RET_OK) {
 		return result_diskinfos;
@@ -62,17 +62,17 @@ LCC_API_HW_IDENTIFICATION_STRATEGY DiskStrategy::identification_strategy() const
 	return LCC_API_HW_IDENTIFICATION_STRATEGY::STRATEGY_DISK;
 }
 
-std::vector<HwIdentifier> DiskStrategy::alternative_ids() const {
+vector<unique_ptr<HwIdentifier>> DiskStrategy::alternative_ids() const {
 	vector<array<uint8_t, HW_IDENTIFIER_PROPRIETARY_DATA>> data;
 	FUNCTION_RETURN result = generate_disk_pc_id(data);
-	vector<HwIdentifier> identifiers;
+	vector<unique_ptr<HwIdentifier>> identifiers;
 	if (result == FUNC_RET_OK) {
 		identifiers.reserve(data.size());
 		for (auto &it : data) {
-			HwIdentifier pc_id;
-			pc_id.set_identification_strategy(identification_strategy());
-			pc_id.set_data(it);
-			identifiers.push_back(pc_id);
+			auto pc_id = std::make_unique<HwIdentifier>();
+			pc_id->set_identification_strategy(identification_strategy());
+			pc_id->set_data(it);
+			identifiers.push_back(std::move(pc_id));
 		}
 	}
 	return identifiers;

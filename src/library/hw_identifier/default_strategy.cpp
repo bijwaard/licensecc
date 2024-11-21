@@ -41,7 +41,7 @@ DefaultStrategy::~DefaultStrategy() {}
 
 LCC_API_HW_IDENTIFICATION_STRATEGY DefaultStrategy::identification_strategy() const { return STRATEGY_DEFAULT; }
 
-FUNCTION_RETURN DefaultStrategy::generate_pc_id(HwIdentifier& pc_id) const {
+FUNCTION_RETURN DefaultStrategy::generate_pc_id(std::unique_ptr<HwIdentifier> &pc_id) const {
 	vector<LCC_API_HW_IDENTIFICATION_STRATEGY> strategy_to_try = available_strategies();
 	FUNCTION_RETURN ret = FUNC_RET_NOT_AVAIL;
 	for (auto it : strategy_to_try) {
@@ -55,15 +55,15 @@ FUNCTION_RETURN DefaultStrategy::generate_pc_id(HwIdentifier& pc_id) const {
 	return ret;
 }
 
-std::vector<HwIdentifier> DefaultStrategy::alternative_ids() const {
+std::vector<unique_ptr<HwIdentifier>> DefaultStrategy::alternative_ids() const {
 	vector<LCC_API_HW_IDENTIFICATION_STRATEGY> strategy_to_try = available_strategies();
-	vector<HwIdentifier> identifiers;
+	vector<unique_ptr<HwIdentifier>> identifiers;
 	FUNCTION_RETURN ret = FUNC_RET_NOT_AVAIL;
 	for (auto it : strategy_to_try) {
 		LCC_API_HW_IDENTIFICATION_STRATEGY strat_to_try = it;
 		unique_ptr<IdentificationStrategy> strategy_ptr = IdentificationStrategy::get_strategy(strat_to_try);
-		vector<HwIdentifier> alt_ids = strategy_ptr->alternative_ids();
-		identifiers.insert(alt_ids.begin(), alt_ids.end(), identifiers.end());
+		vector<unique_ptr<HwIdentifier>> alt_ids = strategy_ptr->alternative_ids();
+		std::move(alt_ids.begin(), alt_ids.end(), std::back_inserter(identifiers));
 	}
 	return identifiers;
 }

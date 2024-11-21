@@ -17,8 +17,8 @@ public:
 	DefaultStrategy();
 	virtual ~DefaultStrategy();
 	virtual LCC_API_HW_IDENTIFICATION_STRATEGY identification_strategy() const;
-	virtual FUNCTION_RETURN generate_pc_id(HwIdentifier &pc_id) const;
-	virtual std::vector<HwIdentifier> alternative_ids() const;
+	virtual FUNCTION_RETURN generate_pc_id(std::unique_ptr<HwIdentifier> &pc_id) const;
+	virtual std::vector<std::unique_ptr<HwIdentifier>> alternative_ids() const;
 	virtual LCC_EVENT_TYPE validate_identifier(const HwIdentifier &identifier) const;
 };
 }  // namespace hw_identifier

@@ -49,12 +49,12 @@ static void generate_and_verify_license(LCC_API_HW_IDENTIFICATION_STRATEGY strat
 	BOOST_CHECK_EQUAL(license.linked_to_pc, true);
 }
 
-BOOST_AUTO_TEST_CASE(volid_lic_file) {
+BOOST_AUTO_TEST_CASE(valid_lic_file) {
 	HwIdentifier identifier_out;
 	vector<DiskInfo> diskInfos;
 	FUNCTION_RETURN result_diskinfos = getDiskInfos(diskInfos);
 	if ((result_diskinfos == FUNC_RET_BUFFER_TOO_SMALL || result_diskinfos == FUNC_RET_OK) && diskInfos.size() > 0) {
-		generate_and_verify_license(LCC_API_HW_IDENTIFICATION_STRATEGY::STRATEGY_DISK, "volid_lic_file");
+		generate_and_verify_license(LCC_API_HW_IDENTIFICATION_STRATEGY::STRATEGY_DISK, "valid_lic_file");
 	} else {
 		BOOST_TEST_MESSAGE("No disk found skipping testing disk hardware identifier");
 	}

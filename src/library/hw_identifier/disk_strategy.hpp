@@ -18,7 +18,7 @@ public:
 	inline DiskStrategy(){};
 	virtual ~DiskStrategy();
 	virtual LCC_API_HW_IDENTIFICATION_STRATEGY identification_strategy() const;
-	virtual std::vector<HwIdentifier> alternative_ids() const;
+	virtual std::vector<std::unique_ptr<HwIdentifier>> alternative_ids() const;
 };
 
 }  // namespace hw_identifier

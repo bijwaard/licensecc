@@ -3,7 +3,8 @@ IF(UNIX OR OPENSSL_FOUND)
 	IF(UNIX)
 		add_library(os OBJECT
 		    openssl/signature_verifier.cpp
-            execution_environment_common.cpp
+  	    	    openssl/base64.cpp 
+		    execution_environment_common.cpp
 		    linux/execution_environment.cpp
 		    linux/cpu_info.cpp
 		    linux/dmi_info.cpp
@@ -15,6 +16,7 @@ IF(UNIX OR OPENSSL_FOUND)
   	    windows/cpu_info.cpp
   	    windows/dmi_info.cpp  
   	    openssl/signature_verifier.cpp 
+  	    openssl/base64.cpp 
         execution_environment_common.cpp 
         windows/execution_environment.cpp
   	    windows/os_win.cpp
@@ -35,6 +37,12 @@ ENDIF(UNIX OR OPENSSL_FOUND)
 
 #dependency of signature_verifier.cpp
 add_dependencies( os project_initialize )
+
+SET( Boost_USE_STATIC_LIBS ON )
+find_package(Boost REQUIRED COMPONENTS date_time filesystem program_options system unit_test_framework)
+ 
+include_directories(${Boost_INCLUDE_DIRS}) 
+add_definitions(-DBOOST_ALL_NO_LIB) #Disable Boost Microsoft magic, all dependencies are handled by cmake
 
 if(CODE_COVERAGE AND UNIX)
 	  target_compile_options(os PUBLIC -O0 -g --coverage)

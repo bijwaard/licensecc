@@ -4,6 +4,7 @@ add_library(hw_identifier OBJECT
 	default_strategy.cpp
 	ethernet.cpp
 	disk_strategy.cpp
+	ethernet_and_disk_strategy.cpp
 	identification_strategy.cpp
 	hw_identifier.cpp
 )

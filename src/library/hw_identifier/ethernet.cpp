@@ -66,17 +66,17 @@ LCC_API_HW_IDENTIFICATION_STRATEGY Ethernet::identification_strategy() const {
 	return use_ip ? STRATEGY_IP_ADDRESS : STRATEGY_ETHERNET;
 }
 
-std::vector<HwIdentifier> Ethernet::alternative_ids() const {
+vector<unique_ptr<HwIdentifier>> Ethernet::alternative_ids() const {
 	vector<array<uint8_t, HW_IDENTIFIER_PROPRIETARY_DATA>> data;
 	FUNCTION_RETURN result = generate_ethernet_pc_id(data, use_ip);
-	vector<HwIdentifier> identifiers;
+	vector<unique_ptr<HwIdentifier>> identifiers;
 	if (result == FUNC_RET_OK) {
 		identifiers.reserve(data.size());
 		for (auto &it : data) {
-			HwIdentifier pc_id;
-			pc_id.set_identification_strategy(identification_strategy());
-			pc_id.set_data(it);
-			identifiers.push_back(pc_id);
+			auto pc_id = std::make_unique<HwIdentifier>();
+			pc_id->set_identification_strategy(identification_strategy());
+			pc_id->set_data(it);
+			identifiers.push_back(std::move(pc_id));
 		}
 	}
 	return identifiers;

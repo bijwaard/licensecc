@@ -11,6 +11,8 @@
 #include <array>
 #include <iostream>
 #include <string>
+#include <vector>
+#include <memory>
 
 #include <licensecc_properties.h>
 #include "../../../include/licensecc/datatypes.h"
@@ -21,6 +23,7 @@ namespace license {
 namespace hw_identifier {
 
 #define HW_IDENTIFIER_PROPRIETARY_DATA 7
+#define HW_IDENTIFIER_PROPRIETARY_DATA_EXT 15
 
 /**
  * data[0]
@@ -30,7 +33,8 @@ namespace hw_identifier {
  * bit 6 = environment variable was used to generate pc_id
  * bit 5-4-3 define identification strategy.
  * bit 2-1-0 unused (crc?)
- * data[1-7] are hardware identifier proprietary strategy data.
+ * data[1..7] are hardware identifier proprietary strategy data.
+ * data[8..15] is extended hardware identifier proprietary strategy data, e.g. when multiple stragies are combined.
  */
 
 class HwIdentifier {
@@ -43,18 +47,40 @@ public:
 	HwIdentifier(const std::string &param);
 	virtual ~HwIdentifier();
 	HwIdentifier(const HwIdentifier &other);
-	void set_identification_strategy(LCC_API_HW_IDENTIFICATION_STRATEGY strategy);
-	LCC_API_HW_IDENTIFICATION_STRATEGY get_identification_strategy() const;
+	virtual void set_identification_strategy(LCC_API_HW_IDENTIFICATION_STRATEGY strategy);
+	virtual LCC_API_HW_IDENTIFICATION_STRATEGY get_identification_strategy() const;
 	void set_use_environment_var(bool use_env_var);
-	void set_data(const std::array<uint8_t, HW_IDENTIFIER_PROPRIETARY_DATA> &data);
-	bool data_match(const std::array<uint8_t, HW_IDENTIFIER_PROPRIETARY_DATA> &data) const;
-	std::string print() const;
+	virtual void set_data(const std::array<uint8_t, HW_IDENTIFIER_PROPRIETARY_DATA> &data);
+	virtual bool data_match(const std::array<uint8_t, HW_IDENTIFIER_PROPRIETARY_DATA> &data) const;
+	virtual std::vector<uint8_t> get_data();
+	virtual std::unique_ptr<HwIdentifier> clone() const;
+	virtual std::string print() const;
 	friend std::ostream &operator<<(std::ostream &output, const HwIdentifier &d) {
 		output << d.print();
 		return output;
 	};
 };
 
+class HwIdentifier2 : public HwIdentifier {
+private:
+	std::array<uint8_t, HW_IDENTIFIER_PROPRIETARY_DATA_EXT + 1> m_data2 = {};
+	friend bool operator==(const HwIdentifier2 &lhs, const HwIdentifier2 &rhs);
+public:
+	HwIdentifier2();
+	HwIdentifier2(const std::string &param);
+	~HwIdentifier2();
+	HwIdentifier2(const HwIdentifier2 &other);
+	void set_identification_strategy(LCC_API_HW_IDENTIFICATION_STRATEGY strategy);
+	LCC_API_HW_IDENTIFICATION_STRATEGY get_identification_strategy() const;
+	void set_data(const std::array<uint8_t, HW_IDENTIFIER_PROPRIETARY_DATA_EXT> &data);
+	bool data_match(const std::array<uint8_t, HW_IDENTIFIER_PROPRIETARY_DATA_EXT> &data) const;
+	std::unique_ptr<HwIdentifier> clone() const override;
+	std::string print() const override;
+	friend std::ostream &operator<<(std::ostream &output, const HwIdentifier2 &d) {
+		output << d.print();
+		return output;
+	};
+};
 
 }  // namespace hw_identifier
 } /* namespace license */

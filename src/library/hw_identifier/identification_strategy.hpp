@@ -28,8 +28,8 @@ protected:
 public:
 	virtual ~IdentificationStrategy(){};
 	virtual LCC_API_HW_IDENTIFICATION_STRATEGY identification_strategy() const = 0;
-	virtual FUNCTION_RETURN generate_pc_id(HwIdentifier& identifier_out) const;
-	virtual std::vector<HwIdentifier> alternative_ids() const = 0;
+	virtual FUNCTION_RETURN generate_pc_id(std::unique_ptr<HwIdentifier> &identifier_out) const;
+	virtual std::vector<std::unique_ptr<HwIdentifier>> alternative_ids() const = 0;
 	virtual LCC_EVENT_TYPE validate_identifier(const HwIdentifier& identifier_in) const;
 
 	/**
@@ -38,6 +38,7 @@ public:
 	 * @return
 	 */
 	static std::unique_ptr<IdentificationStrategy> get_strategy(LCC_API_HW_IDENTIFICATION_STRATEGY strategy);
+	static std::unique_ptr<HwIdentifier> get_identifier(LCC_API_HW_IDENTIFICATION_STRATEGY strategy);
 };
 
 }  // namespace hw_identifier

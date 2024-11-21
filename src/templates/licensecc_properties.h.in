@@ -46,7 +46,8 @@
 #define LCC_API_MAX_LICENSE_DATA_LENGTH 1024 * 4
 
 // define api structure sizes
-#define LCC_API_PC_IDENTIFIER_SIZE 19
+//#define LCC_API_PC_IDENTIFIER_SIZE 19
+#define LCC_API_PC_IDENTIFIER_SIZE (6*4+5)
 #define LCC_API_PROPRIETARY_DATA_SIZE 16
 #define LCC_API_AUDIT_EVENT_NUM 5
 #define LCC_API_AUDIT_EVENT_PARAM2 255
@@ -107,6 +108,7 @@ enum LCC_API_HW_IDENTIFICATION_STRATEGY {
 	* Not yet implemented
 	*/
 	STRATEGY_HOST_NAME = 4,
+	STRATEGY_ETHERNET_AND_DISK = 5,
 	STRATEGY_NONE = -2
 };
 
@@ -117,7 +119,7 @@ enum LCC_API_HW_IDENTIFICATION_STRATEGY {
 /**
  * List the strategies used when no virtual envrionment is detected
  */
-#define LCC_BARE_TO_METAL_STRATEGIES { STRATEGY_DISK, STRATEGY_HOST_NAME, STRATEGY_NONE }
+#define LCC_BARE_TO_METAL_STRATEGIES { STRATEGY_ETHERNET_AND_DISK, STRATEGY_DISK, STRATEGY_HOST_NAME, STRATEGY_NONE }
 /**
  * List the strategies used when the software is executing in a virtual machine
  */

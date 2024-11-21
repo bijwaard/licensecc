@@ -51,13 +51,15 @@ std::string HwIdentifierFacade::generate_user_pc_signature(LCC_API_HW_IDENTIFICA
 	}
 
 	unique_ptr<IdentificationStrategy> strategy_ptr = IdentificationStrategy::get_strategy(strategy);
-	HwIdentifier pc_id;
+	unique_ptr<HwIdentifier> pc_id= IdentificationStrategy::get_identifier(strategy);
+        //std::cout << "hw_identifier_facade: strategy=" << strategy << ", initial pc_id=" << pc_id->print() << std::endl;
 	FUNCTION_RETURN result = strategy_ptr->generate_pc_id(pc_id);
-	pc_id.set_use_environment_var(use_env_var);
+        //std::cout << "hw_identifier_facade: strategy=" << strategy << ", generated pc_id=" << pc_id->print() << std::endl;
+	pc_id->set_use_environment_var(use_env_var);
 	if (result != FUNC_RET_OK) {
 		throw logic_error("strategy " + to_string(strategy_ptr->identification_strategy()) + " failed");
 	}
-	return pc_id.print();
+	return pc_id->print();
 }
 
 }  // namespace hw_identifier
