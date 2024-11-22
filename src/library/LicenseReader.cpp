@@ -34,9 +34,9 @@ namespace license {
 using namespace std;
 
 FullLicenseInfo::FullLicenseInfo(const string &source, const string &product, const string &license_signature)
-	: source(source),
+	: license_signature(license_signature),
+	  source(source),
 	  m_project(product),  //
-	  license_signature(license_signature),
 	  m_magic(0) {}
 
 LicenseReader::LicenseReader(const LicenseLocation *licenseLocation) : licenseLocation(licenseLocation) {}

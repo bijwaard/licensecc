@@ -52,9 +52,9 @@ typedef enum {
 
 typedef enum { SVRT_INFO, SVRT_WARN, SVRT_ERROR } LCC_SEVERITY;
 
-typedef struct {
-	LCC_SEVERITY severity;
-	LCC_EVENT_TYPE event_type;
+typedef struct AuditEvent {
+	LCC_SEVERITY severity=SVRT_ERROR;
+	LCC_EVENT_TYPE event_type=LICENSE_OK;
 	/**
 	 * License file name or location where the license is stored.
 	 */
@@ -85,15 +85,15 @@ typedef enum {
  * Can be NULL, in this case OpenLicenseManager will try to figure out the
  * license file location on its own.
  */
-typedef struct {
-	LCC_LICENSE_DATA_TYPE license_data_type;
+typedef struct LicenceLocation {
+	LCC_LICENSE_DATA_TYPE license_data_type=LICENSE_PATH;
 	char licenseData[LCC_API_MAX_LICENSE_DATA_LENGTH];
 } LicenseLocation;
 
 /**
  * Informations about the software requesting the license verification (eg, software version, feature to verify).
  */
-typedef struct {
+typedef struct CallerInformations {
 	/**
 	 *  software version in format xxxx[.xxxx.xxxx]
 	 *  NOT IMPLEMENTED pass '\0'
@@ -115,10 +115,10 @@ typedef struct {
 	 * this number passed in by the application must correspond to the magic number used when compiling the library.
 	 * See cmake parameter -DLCC_PROJECT_MAGIC_NUM and licensecc_properties.h macro VERIFY_MAGIC
 	 */
-	unsigned int magic;
+	unsigned int magic=0; // make sure it has correct default for e.g. MSVC builds
 } CallerInformations;
 
-typedef struct {
+typedef struct LicenseInfo {
 	/**
 	 * Detailed reason of success/failure. Reasons for a failure can be
 	 * multiple (for instance, license expired and signature not verified).
@@ -130,15 +130,15 @@ typedef struct {
 	 * can be '\0' if the software don't expire
 	 * */
 	char expiry_date[LCC_API_EXPIRY_DATE_SIZE + 1];
-	unsigned int days_left;
-	bool has_expiry;
-	bool linked_to_pc;
-	LCC_LICENSE_TYPE license_type;  // Local or Remote
+	unsigned int days_left=-1;
+	bool has_expiry=false;
+	bool linked_to_pc=false;
+	LCC_LICENSE_TYPE license_type=LCC_LOCAL;  // Local or Remote
 	/* A string of character inserted into the license understood
 	 * by the calling application.
 	 * '\0' if the application didn't specify one */
 	char proprietary_data[LCC_API_PROPRIETARY_DATA_SIZE + 1];
-	int license_version;  // license file version
+	int license_version=-1;  // license file version
 } LicenseInfo;
 
 typedef enum { BARE_TO_METAL, VMWARE, VIRTUALBOX, V_XEN, KVM, HV, PARALLELS, V_OTHER } LCC_API_VIRTUALIZATION_DETAIL;
@@ -160,10 +160,10 @@ typedef enum {
 
 typedef enum { NONE, CONTAINER, VM } LCC_API_VIRTUALIZATION_SUMMARY;
 
-typedef struct {
-	LCC_API_CLOUD_PROVIDER cloud_provider;
-	LCC_API_VIRTUALIZATION_SUMMARY virtualization;
-	LCC_API_VIRTUALIZATION_DETAIL virtualization_detail;
+typedef struct ExecutionEnvironmentInfo {
+	LCC_API_CLOUD_PROVIDER cloud_provider=PROV_UNKNOWN;
+	LCC_API_VIRTUALIZATION_SUMMARY virtualization=NONE;
+	LCC_API_VIRTUALIZATION_DETAIL virtualization_detail=V_OTHER;
 } ExecutionEnvironmentInfo;
 
 #ifdef __cplusplus
