@@ -129,7 +129,10 @@ void HwIdentifier2::set_identification_strategy(LCC_API_HW_IDENTIFICATION_STRATE
 		throw logic_error("Only known strategies are permitted");
 	}
 	uint8_t stratMov = (strategy << 5);
+        //std::cout << "HwIdentifier2->set_identification_strategy: strategy=" << strategy << ", byte: " << int(stratMov) << ", orig[1]=" << m_data2[1] << std::endl;
 	m_data2[1] = (m_data2[1] & 0x1F) | stratMov;
+        //std::cout << "OutByte: " ; for (size_t i = 0; i < m_data2.size(); ++i) { std::cout << ", " << static_cast<int>(m_data2[i]); } std::cout << std::endl;
+        //std::cout << "HwIdentifier2->set_identification_strategy result: " << print() << std::endl;
 }
 
 void HwIdentifier2::set_data(const std::array<uint8_t, HW_IDENTIFIER_PROPRIETARY_DATA_EXT>& data) {

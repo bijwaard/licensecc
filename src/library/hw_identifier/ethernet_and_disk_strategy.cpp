@@ -69,8 +69,8 @@ vector<unique_ptr<HwIdentifier>> EthernetAndDiskStrategy::alternative_ids() cons
 			pc_id->set_identification_strategy(identification_strategy());
 			array<uint8_t, HW_IDENTIFIER_PROPRIETARY_DATA_EXT> identifier = {};
 			vector<uint8_t> disk_data=it_disk->get_data();
-			std::copy(eth_data.begin(), eth_data.end(), identifier.begin());
-			std::copy(disk_data.begin(), disk_data.end(), identifier.begin()+eth_data.size());
+			std::copy(eth_data.begin()+2, eth_data.end(), identifier.begin()+1); // skip first 2 administrative bytes
+			std::copy(disk_data.begin()+2, disk_data.end(), identifier.begin()+eth_data.size()-1); // skip first 2 administrative bytes
 			pc_id->set_data(identifier);
 /*
 	                cout << "Input ethernet: " << print(eth_data) << endl;

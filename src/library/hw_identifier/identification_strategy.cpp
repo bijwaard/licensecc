@@ -8,13 +8,13 @@ namespace license {
 namespace hw_identifier {
 
 using namespace std;
-LCC_EVENT_TYPE IdentificationStrategy::validate_identifier(const HwIdentifier& identifier) const {
+LCC_EVENT_TYPE IdentificationStrategy::validate_identifier(const std::unique_ptr<HwIdentifier> &identifier) const {
 	LCC_EVENT_TYPE result = IDENTIFIERS_MISMATCH;
 
-	if (identifier.get_identification_strategy() == identification_strategy()) {
+	if (identifier->get_identification_strategy() == identification_strategy()) {
 		const vector<unique_ptr<HwIdentifier>> available_ids = alternative_ids();
 		for (const auto& it : available_ids) {
-			if (*it == identifier) {
+			if (*it == *identifier) {
 				result = LICENSE_OK;
 				break;
 			}
@@ -55,6 +55,14 @@ std::unique_ptr<IdentificationStrategy> IdentificationStrategy::get_strategy(LCC
 			throw logic_error("strategy not supported");
 	}
 	return result;
+}
+
+std::unique_ptr<HwIdentifier> IdentificationStrategy::get_identifier(std::string const& param) {
+	if (param.size()>=HW_IDENTIFIER_PROPRIETARY_DATA_EXT) {
+        	return unique_ptr<HwIdentifier>(dynamic_cast<HwIdentifier*>(new HwIdentifier2(param)));
+	} else {
+        	return unique_ptr<HwIdentifier>(dynamic_cast<HwIdentifier*>(new HwIdentifier(param)));
+	}
 }
 
 std::unique_ptr<HwIdentifier> IdentificationStrategy::get_identifier(LCC_API_HW_IDENTIFICATION_STRATEGY strategy) {

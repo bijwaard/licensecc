@@ -21,10 +21,10 @@ namespace hw_identifier {
 using namespace std;
 
 LCC_EVENT_TYPE HwIdentifierFacade::validate_pc_signature(const std::string& str_code) {
-	LCC_EVENT_TYPE result = IDENTIFIERS_MISMATCH;
+	LCC_EVENT_TYPE result = IDENTIFIERS_MISMATCH; // FIXME for eth_and_disk
 	try {
-        HwIdentifier pc_id(str_code);
-        LCC_API_HW_IDENTIFICATION_STRATEGY id_strategy = pc_id.get_identification_strategy();
+		std::unique_ptr<HwIdentifier> pc_id=IdentificationStrategy::get_identifier(str_code);
+        	LCC_API_HW_IDENTIFICATION_STRATEGY id_strategy = pc_id->get_identification_strategy();
 		unique_ptr<IdentificationStrategy> strategy = IdentificationStrategy::get_strategy(id_strategy);
 		result = strategy->validate_identifier(pc_id);
 	} catch (logic_error& e) {
