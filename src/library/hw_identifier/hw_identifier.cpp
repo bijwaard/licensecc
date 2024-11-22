@@ -89,6 +89,7 @@ LCC_API_HW_IDENTIFICATION_STRATEGY HwIdentifier::get_identification_strategy() c
 
 bool HwIdentifier::data_match(const std::array<uint8_t, HW_IDENTIFIER_PROPRIETARY_DATA>& data) const {
 	bool equals = true;
+        //std::cout << "HWIdenfifier:data_match self=" << print() << " with " << ::print(data) << std::endl;
 	for (int i = 0; i < HW_IDENTIFIER_PROPRIETARY_DATA && equals; i++) {
 		equals = (i == 0) ? ((data[i] & 0x1f) == (m_data[i + 1] & 0x1f)) : (data[i] == m_data[i + 1]);
 	}
@@ -99,13 +100,20 @@ std::unique_ptr<HwIdentifier> HwIdentifier::clone() const {
 	return std::make_unique<HwIdentifier>(*this);
 }
 
-bool operator==(const HwIdentifier& lhs, const HwIdentifier& rhs) {
-	bool equals = lhs.get_identification_strategy() == rhs.get_identification_strategy();
+bool HwIdentifier::equals(const HwIdentifier& other) const {
+	bool equals = get_identification_strategy() == other.get_identification_strategy();
+        //std::cout << "HWIdenfifier:equals " << print() << " with other=" << other.print() << std::endl;
 	for (int i = 0; i < HW_IDENTIFIER_PROPRIETARY_DATA && equals; i++) {
-		equals = (i == 0) ? ((rhs.m_data[i + 1] & 0x1f) == (lhs.m_data[i + 1] & 0x1f))
-						  : (lhs.m_data[i + 1] == rhs.m_data[i + 1]);
+		equals = (i == 0) ? ((m_data[i + 1] & 0x1f) == (other.m_data[i + 1] & 0x1f))
+						  : (m_data[i + 1] == other.m_data[i + 1]);
 	}
 	return equals;
+}
+
+bool operator==(const std::unique_ptr<HwIdentifier> &lhs, const std::unique_ptr<HwIdentifier> &rhs) {
+	if (!lhs || !rhs)
+		return lhs.get() == rhs.get();
+	return lhs->equals(*rhs);
 }
 
 HwIdentifier2::HwIdentifier2() {}
@@ -133,6 +141,14 @@ void HwIdentifier2::set_identification_strategy(LCC_API_HW_IDENTIFICATION_STRATE
 	m_data2[1] = (m_data2[1] & 0x1F) | stratMov;
         //std::cout << "OutByte: " ; for (size_t i = 0; i < m_data2.size(); ++i) { std::cout << ", " << static_cast<int>(m_data2[i]); } std::cout << std::endl;
         //std::cout << "HwIdentifier2->set_identification_strategy result: " << print() << std::endl;
+}
+
+void HwIdentifier2::set_use_environment_var(bool use_env_var) {
+	if (use_env_var) {
+		m_data2[0] = m_data2[0] | 0x40;
+	} else {
+		m_data2[0] = m_data2[0] & ~0x40;
+	}
 }
 
 void HwIdentifier2::set_data(const std::array<uint8_t, HW_IDENTIFIER_PROPRIETARY_DATA_EXT>& data) {
@@ -165,19 +181,23 @@ LCC_API_HW_IDENTIFICATION_STRATEGY HwIdentifier2::get_identification_strategy() 
 
 bool HwIdentifier2::data_match(const std::array<uint8_t, HW_IDENTIFIER_PROPRIETARY_DATA_EXT>& data) const {
 	bool equals = true;
+        //std::cout << "HWIdenfifier2:data_match self=" << print() << " with " << ::print(data) << std::endl;
 	for (int i = 0; i < HW_IDENTIFIER_PROPRIETARY_DATA_EXT && equals; i++) {
 		equals = (i == 0) ? ((data[i] & 0x1f) == (m_data2[i + 1] & 0x1f)) : (data[i] == m_data2[i + 1]);
 	}
 	return equals;
 }
 
-bool operator==(const HwIdentifier2& lhs, const HwIdentifier2& rhs) {
-	bool equals = lhs.get_identification_strategy() == rhs.get_identification_strategy();
+bool HwIdentifier2::equals(const HwIdentifier& other) const {
+	const HwIdentifier2* other2 = dynamic_cast<const HwIdentifier2*>(&other);
+	bool equals = get_identification_strategy() == other2->get_identification_strategy();
+        //std::cout << "HWIdenfifier2:equals " << print() << " with other=" << other2->print() << std::endl;
 	for (int i = 0; i < HW_IDENTIFIER_PROPRIETARY_DATA_EXT && equals; i++) {
-		equals = (i == 0) ? ((rhs.m_data2[i + 1] & 0x1f) == (lhs.m_data2[i + 1] & 0x1f))
-						  : (lhs.m_data2[i + 1] == rhs.m_data2[i + 1]);
+		equals = (i == 0) ? ((m_data2[i + 1] & 0x1f) == (other2->m_data2[i + 1] & 0x1f))
+						  : (m_data2[i + 1] == other2->m_data2[i + 1]);
 	}
 	return equals;
 }
+
 }  // namespace hw_identifier
 } /* namespace license */

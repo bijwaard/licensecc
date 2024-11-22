@@ -40,7 +40,8 @@ namespace hw_identifier {
 class HwIdentifier {
 private:
 	std::array<uint8_t, HW_IDENTIFIER_PROPRIETARY_DATA + 1> m_data = {};
-	friend bool operator==(const HwIdentifier &lhs, const HwIdentifier &rhs);
+	virtual bool equals(const HwIdentifier& other) const;
+	friend bool operator==(const std::unique_ptr<HwIdentifier> &lhs, const std::unique_ptr<HwIdentifier> &rhs);
 
 public:
 	HwIdentifier();
@@ -49,14 +50,14 @@ public:
 	HwIdentifier(const HwIdentifier &other);
 	virtual void set_identification_strategy(LCC_API_HW_IDENTIFICATION_STRATEGY strategy);
 	virtual LCC_API_HW_IDENTIFICATION_STRATEGY get_identification_strategy() const;
-	void set_use_environment_var(bool use_env_var);
+	virtual void set_use_environment_var(bool use_env_var);
 	virtual void set_data(const std::array<uint8_t, HW_IDENTIFIER_PROPRIETARY_DATA> &data);
 	virtual bool data_match(const std::array<uint8_t, HW_IDENTIFIER_PROPRIETARY_DATA> &data) const;
 	virtual std::vector<uint8_t> get_data();
 	virtual std::unique_ptr<HwIdentifier> clone() const;
 	virtual std::string print() const;
-	friend std::ostream &operator<<(std::ostream &output, const HwIdentifier &d) {
-		output << d.print();
+	friend std::ostream &operator<<(std::ostream &output, const std::unique_ptr<HwIdentifier> &d) {
+		output << d->print();
 		return output;
 	};
 };
@@ -64,7 +65,7 @@ public:
 class HwIdentifier2 : public HwIdentifier {
 private:
 	std::array<uint8_t, HW_IDENTIFIER_PROPRIETARY_DATA_EXT + 1> m_data2 = {};
-	friend bool operator==(const HwIdentifier2 &lhs, const HwIdentifier2 &rhs);
+	bool equals(const HwIdentifier& other) const override;
 public:
 	HwIdentifier2();
 	HwIdentifier2(const std::string &param);
@@ -72,14 +73,11 @@ public:
 	HwIdentifier2(const HwIdentifier2 &other);
 	void set_identification_strategy(LCC_API_HW_IDENTIFICATION_STRATEGY strategy);
 	LCC_API_HW_IDENTIFICATION_STRATEGY get_identification_strategy() const;
+	void set_use_environment_var(bool use_env_var);
 	void set_data(const std::array<uint8_t, HW_IDENTIFIER_PROPRIETARY_DATA_EXT> &data);
 	bool data_match(const std::array<uint8_t, HW_IDENTIFIER_PROPRIETARY_DATA_EXT> &data) const;
 	std::unique_ptr<HwIdentifier> clone() const override;
 	std::string print() const override;
-	friend std::ostream &operator<<(std::ostream &output, const HwIdentifier2 &d) {
-		output << d.print();
-		return output;
-	};
 };
 
 }  // namespace hw_identifier

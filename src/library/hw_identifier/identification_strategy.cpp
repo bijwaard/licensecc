@@ -14,7 +14,7 @@ LCC_EVENT_TYPE IdentificationStrategy::validate_identifier(const std::unique_ptr
 	if (identifier->get_identification_strategy() == identification_strategy()) {
 		const vector<unique_ptr<HwIdentifier>> available_ids = alternative_ids();
 		for (const auto& it : available_ids) {
-			if (*it == *identifier) {
+			if (it == identifier) {
 				result = LICENSE_OK;
 				break;
 			}
