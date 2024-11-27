@@ -1,4 +1,5 @@
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+
 ADD_LIBRARY(base OBJECT
     EventRegistry.cpp
     file_utils.cpp

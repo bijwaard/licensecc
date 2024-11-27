@@ -1,4 +1,5 @@
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+
 add_library(hw_identifier OBJECT
 	hw_identifier_facade.cpp
 	default_strategy.cpp

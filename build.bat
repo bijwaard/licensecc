@@ -1,7 +1,7 @@
 @echo off
 set PROJECT=equimoves
 set BOOST_ROOT=%~dp0\..\boost_1_86_0
-set SSL_ROOT="C:/Program Files/OpenSSL-Win64"
+set SSL_ROOT=C:\Program Files\OpenSSL-Win64
 set INSTALL_DIR=%~dp0\install
 mkdir build
 cd build

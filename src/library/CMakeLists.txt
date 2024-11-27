@@ -1,4 +1,10 @@
-set(CMAKE_CXX_STANDARD 17)
+#cmake_minimum_required(VERSION 3.6 FATAL_ERROR)
+#set(CMAKE_CXX_STANDARD 17)
+
+if(MSVC)
+  set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif()
+
 add_subdirectory("base")
 add_subdirectory("os")
 add_subdirectory("locate")

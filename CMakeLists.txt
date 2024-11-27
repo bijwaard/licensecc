@@ -1,5 +1,8 @@
-cmake_minimum_required(VERSION 3.6 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.15 FATAL_ERROR)
 set(CMAKE_CXX_STANDARD 17)
+
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+set(STATIC_RUNTIME TRUE)
 
 SET(LICENSECC_SHORT_LICENSE "BSD Software License")
 
@@ -24,7 +27,6 @@ project (licensecc
 			LANGUAGES CXX)
 set(PROJECT_DESCRIPTION "Copy protection and licensing library")
 
-set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")
 
@@ -86,13 +88,13 @@ else(UNIX)
 		target_architecture( TARGET_ARCHITECTURE )
 		message(STATUS "architecture detected: ${TARGET_ARCHITECTURE}")
 		#cmake > 3.15 handle the /MD flag more nicely than this
-		if(STATIC_RUNTIME)
+		if(${STATIC_RUNTIME})
 		    message(STATUS "Static runtime ${STATIC_RUNTIME}")
 			string(REPLACE "/MD" "/MT" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
 			string(REPLACE "/MDd" "/MTd" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
 			#list(APPEND CMAKE_CXX_FLAGS_DEBUG "/MTd")
 			SET(Boost_USE_STATIC_RUNTIME ON)
-		endif(STATIC_RUNTIME)
+		endif(${STATIC_RUNTIME})
 		add_definitions("/D _CRT_SECURE_NO_WARNINGS")
 	    list(APPEND EXTERNAL_LIBS "bcrypt" "crypt32" "ws2_32" "iphlpapi")
 	else(MSVC)
@@ -145,6 +147,10 @@ if(WIN32 AND "x${CMAKE_CXX_COMPILER_ARCHITECTURE_ID}" STREQUAL "x")
 	    message(STATUS "Compiler architecture: ${CMAKE_CXX_COMPILER_ARCHITECTURE_ID}")
 endif()
 SET( Boost_USE_STATIC_LIBS ON )
+if(${RUNTIME_STATIC})
+set(Boost_USE_STATIC_RUNTIME ON)
+endif(${RUNTIME_STATIC})
+
 find_package(Boost COMPONENTS unit_test_framework system filesystem)
 #if boost is found enable tests
 IF(Boost_FOUND)

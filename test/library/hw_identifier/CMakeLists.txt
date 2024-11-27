@@ -1,4 +1,5 @@
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+
 add_executable( test_hw_identifier
  hw_identifier_test.cpp
 )

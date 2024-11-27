@@ -1,4 +1,9 @@
-set(CMAKE_CXX_STANDARD 17)
+#cmake_minimum_required(VERSION 3.6 FATAL_ERROR)
+#set(CMAKE_CXX_STANDARD 17)
+#add_definitions(-DBOOST_ALL_NO_LIB) #Disable Boost Microsoft magic, all dependencies are handled by cmake
+
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+
 ADD_LIBRARY(license_generator_snippet STATIC
  	generate-license.cpp
 )
