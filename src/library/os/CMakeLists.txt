@@ -39,8 +39,8 @@ ENDIF(UNIX OR OPENSSL_FOUND)
 #dependency of signature_verifier.cpp
 add_dependencies( os project_initialize )
 
-#SET( Boost_USE_STATIC_LIBS ON )
-#find_package(Boost REQUIRED COMPONENTS date_time filesystem program_options system unit_test_framework)
+SET( Boost_USE_STATIC_LIBS ON )
+find_package(Boost REQUIRED COMPONENTS date_time filesystem program_options system unit_test_framework)
  
 include_directories(${Boost_INCLUDE_DIRS}) 
 add_definitions(-DBOOST_ALL_NO_LIB) #Disable Boost Microsoft magic, all dependencies are handled by cmake
